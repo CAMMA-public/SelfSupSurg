@@ -12,4 +12,4 @@ _Sanat Ramesh, Vinkle Srivastav, Deepak Alapatt, Tong Yu, Aditya Murali, Luca Se
 
 [![arXiv](https://img.shields.io/badge/arxiv-2207.00449-red)](https://arxiv.org/abs/2207.00449)
 
-<p float="center"> <img src="images/concept.mp4" width="90%" /> </p>
+<p float="center"> <img src="images/concept.gif" width="90%" /> </p>
