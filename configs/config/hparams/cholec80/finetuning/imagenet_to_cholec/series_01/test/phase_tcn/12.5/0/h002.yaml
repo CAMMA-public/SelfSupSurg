@@ -1,0 +1,190 @@
+# main_im2ch_ft_s02_moco_phase_tcn_12.5_0
+
+config:
+  FEATURE_EXTRACTION: True
+  ID: 2
+  TAG: main_im2ch_ft_s02_moco_phase_tcn_12.5_0
+  VERBOSE: False
+  LOG_FREQUENCY: 30
+  TEST_ONLY: False
+  TEST_MODEL: True
+  TEST_EVERY_NUM_EPOCH: 1
+  FEATURE_EXTRACT: Head
+  SEED_VALUE: 99765
+  MULTI_PROCESSING_METHOD: forkserver
+  MONITOR_PERF_STATS: True
+  PERF_STAT_FREQUENCY: 10
+  ROLLING_BTIME_FREQ: 10
+  DATA:
+    NUM_DATALOADER_WORKERS: 6
+    NUM_OF_SURGICAL_TOOLS: 7
+    NUM_CLASSES_PHASE: 7
+    LABEL_TOOL_OR_PHASE: Phase
+    TRAIN:
+      DATA_PATHS: [./datasets/cholec80/labels/train/1fps_12p5_0.pickle]
+      LABEL_PATHS: [./datasets/cholec80/labels/train/1fps_12p5_0.pickle]
+      DATA_SOURCES: [disk_filelist_surgery]
+      LABEL_SOURCES: [disk_filelist_surgery]
+      DATASET_NAMES: [surgery_datasets]
+      BATCHSIZE_PER_REPLICA: 256
+      LABEL_TYPE: standard
+      TRANSFORMS:
+        - name: Resize
+          size: [224, 399]
+        - name: ToTensor
+        - name: Normalize
+          mean: [0.485, 0.456, 0.406]
+          std: [0.229, 0.224, 0.225]
+      MMAP_MODE: True
+      COPY_TO_LOCAL_DISK: False
+      DATA_LIMIT: -1
+      DROP_LAST: True
+      COPY_DESTINATION_DIR: "/tmp/imagenet1k"
+    VAL:
+      DATA_PATHS: [./datasets/cholec80/labels/val/1fps.pickle]
+      LABEL_PATHS: [./datasets/cholec80/labels/val/1fps.pickle]
+      DATA_SOURCES: [disk_filelist_surgery]
+      LABEL_SOURCES: [disk_filelist_surgery]
+      DATASET_NAMES: [surgery_datasets]
+      BATCHSIZE_PER_REPLICA: 256
+      LABEL_TYPE: standard
+      TRANSFORMS:
+        - name: Resize
+          size: [224, 399]
+        - name: ToTensor
+        - name: Normalize
+          mean: [0.485, 0.456, 0.406]
+          std: [0.229, 0.224, 0.225]
+      MMAP_MODE: True
+      COPY_TO_LOCAL_DISK: False
+      DATA_LIMIT: -1
+      DROP_LAST: False
+    TEST:
+      DATA_PATHS: [./datasets/cholec80/labels/test/1fps.pickle]
+      LABEL_PATHS: [./datasets/cholec80/labels/test/1fps.pickle]
+      DATA_SOURCES: [disk_filelist_surgery]
+      LABEL_SOURCES: [disk_filelist_surgery]
+      DATASET_NAMES: [surgery_datasets]
+      BATCHSIZE_PER_REPLICA: 256
+      LABEL_TYPE: standard
+      TRANSFORMS:
+        - name: Resize
+          size: [224, 399]
+        - name: ToTensor
+        - name: Normalize
+          mean: [0.485, 0.456, 0.406]
+          std: [0.229, 0.224, 0.225]
+      MMAP_MODE: True
+      COPY_TO_LOCAL_DISK: False
+      DATA_LIMIT: -1
+      DROP_LAST: False
+  TRAINER:
+    TRAIN_STEP_NAME: custom_train_step_surgery
+  METERS:
+    name: accuracy_list_meter
+    accuracy_list_meter:
+      num_meters: 1
+      topk_values: [1]
+  MODEL:
+    name: TCN
+    FEATURE_EVAL_SETTINGS:
+        EVAL_MODE_ON: True
+        FREEZE_TRUNK_ONLY: True
+        FREEZE_TRUNK_AND_HEAD: False
+        EVAL_TRUNK_AND_HEAD: False
+        SHOULD_FLATTEN_FEATS: False
+        EXTRACT_TRUNK_FEATURES_ONLY: False
+    TRUNK:
+      NAME: resnet
+      RESNETS:
+        DEPTH: 50
+        WIDTH_MULTIPLIER: 1
+      REGNET:
+        depth: 18
+        w_0: 200
+        w_a: 106.23
+        w_m: 2.48
+        group_width: 112
+    HEAD:
+      PARAMS: [
+        ["mlp", {"dims": [2048, 7]}],
+      ]
+    FCN:
+      in_features: 2048
+      out_features: 7
+    SYNC_BN_CONFIG:
+      CONVERT_BN_TO_SYNC_BN: True
+      SYNC_BN_TYPE: apex
+      GROUP_SIZE: -1
+    AMP_PARAMS:
+      USE_AMP: True
+      AMP_TYPE: apex
+    WEIGHTS_INIT:
+      PARAMS_FILE: "runs/cholec80/finetuning/imagenet_to_cholec/series_01/run_002/test/phase/12.5/0"
+      APPEND_PREFIX: ""
+      STATE_DICT_KEY_NAME: "classy_state_dict"
+    TCN:
+      MODULE : mstcn.tecno.TeCNO
+      MODEL : mstcn.MultiStageModel
+      OUT_FEATURES : 7
+      NUM_WORKERS : 6
+      BATCH_SIZE : 1
+      FEATURES_PER_SECONDS : 1
+      FEATURES_SUBSAMPLING : 1
+      LOG_EVERY_N_STEPS : 1
+      MSTCN_CAUSAL_CONV : True
+      LEARNING_RATE : 0.00007
+      MIN_EPOCHS : 12
+      MAX_EPOCHS : 100
+      MSTCN_LAYERS : 9
+      MSTCN_F_MAPS : 64
+      MSTCN_F_DIM: 2048
+      MSTCN_STAGES : 2
+      EARLY_STOPPING_METRIC : val_loss
+      SAVE_TOP_K : 1
+      GPUS : ['0']
+      NUM_SANITY_VAL_steps: 0
+      CHECKPOINT_DIR : "runs/cholec80/finetuning/imagenet_to_cholec/series_01/run_002/test/phase_tcn/12.5/0"
+  LOSS:
+    name: cross_entropy_multiple_output_single_target
+    cross_entropy_multiple_output_single_target:
+      pos_weight: [1, 1, 1, 1, 1, 1, 1]
+      ignore_index: -1
+  OPTIMIZER:
+    name: adam
+    weight_decay: 0.0005
+    momentum: 0.9
+    num_epochs: 800
+    nesterov: True
+    regularize_bn: False
+    regularize_bias: True
+    param_schedulers:
+      lr:
+        name: multistep
+        base_lr: 0.0007
+        gamma: 0.33
+        values: [0.003, 0.001]
+        milestones: [600]
+        update_interval: epoch
+  DISTRIBUTED:
+    BACKEND: nccl
+    NUM_NODES: 1
+    NUM_PROC_PER_NODE: 4
+    INIT_METHOD: tcp
+    RUN_ID: auto
+  MACHINE:
+    DEVICE: gpu
+  CHECKPOINT:
+    DIR: "runs/cholec80/finetuning/imagenet_to_cholec/series_01/run_002/test/phase_tcn/12.5/0/checkpoints"
+    AUTO_RESUME: True
+    CHECKPOINT_FREQUENCY: 800
+    OVERWRITE_EXISTING: True
+  HOOKS:
+    TENSORBOARD_SETUP:
+      USE_TENSORBOARD: True
+      EXPERIMENT_LOG_DIR: "runs/cholec80/finetuning/imagenet_to_cholec/series_01/run_002/test/phase_tcn/12.5/0"
+      FLUSH_EVERY_N_MIN: 20
+      LOG_PARAMS: False
+      LOG_PARAMS_GRADIENTS: False
+      LOG_PARAMS_EVERY_N_ITERS: -1
+  RUN_DIR: "runs/cholec80/finetuning/imagenet_to_cholec/series_01/run_002/test/phase_tcn/12.5/0"
