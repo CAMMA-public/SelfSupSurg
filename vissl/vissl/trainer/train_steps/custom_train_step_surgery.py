@@ -1,7 +1,8 @@
-# Copyright (c) Facebook, Inc. and its affiliates.
-
-# This source code is licensed under the MIT license found in the
-# LICENSE file in the root directory of this source tree.
+'''
+Project: SelfSupSurg
+-----
+Copyright (c) University of Strasbourg, All Rights Reserved.
+'''
 
 """
 This is the train step that"s most commonly used in most of the model trainings.
