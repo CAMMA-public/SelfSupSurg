@@ -53,7 +53,9 @@ Follow the steps for cholec80 dataset preparation and setting up imagenet checkp
 > wget https://s3.unistra.fr/camma_public/github/selfsupsurg/ch80_labels.zip
 > unzip -q ch80_labels.zip && rm ch80_labels.zip
 # 2. Cholec80 frames:  
-# a) Download cholec80 dataset: Fill this google form to get the download link for the Cholec80 dataset: https://docs.google.com/forms/d/1GwZFM3-GhEduBs1d5QzbfFksKmS1OqXZAz8keYi-wKI  (the link is also available on the CAMMA website: http://camma.u-strasbg.fr/datasets)
+# a) Download cholec80 dataset: 
+#      - Fill this google form: https://docs.google.com/forms/d/1GwZFM3-GhEduBs1d5QzbfFksKmS1OqXZAz8keYi-wKI  
+#       (the link is also available on the CAMMA website: http://camma.u-strasbg.fr/datasets)
 # b) Copy the videos in datasets/cholec80/videos 
 # Extract frames using the following script (you need OpenCV and numpy)
 > cd $SelfSupSurg
