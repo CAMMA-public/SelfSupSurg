@@ -19,12 +19,7 @@ from sklearn.metrics import precision_recall_fscore_support as score
 from model_helpers import mAP
 
 root_dir = 'runs/'
-#sub_dir = 'ssl_ablation'
-#sub_dir = 'ssl_main/transferability/'
-#sub_dir = 'ssl_main/finetuning/cholec_to_cholec'
-#sub_dir = 'ssl_main/bypass40/'
-#sub_dir = "ssl_ablation/fps/series_01" runs/ssl_main_v2/finetuning/cholec_to_cholec
-sub_dir = 'ssl_main_v2/finetuning/'
+sub_dir = ''
 feat_dir = 'extracted_features'
 header_tool = 'no, mAP, experiment\n'
 header_phase = 'no, accuracy, precision, recall, f-score, support, experiment\n'
@@ -96,11 +91,8 @@ def compute_phase_scores(inds, labels, predicts, agg, directory=''):
         std = std.tolist()
 
     elif agg == 'class':
-        # scores = score(labels, preds)
-        # mean = (np.array(scores[2]) * 100).tolist()
-        # std = np.zeros_like(mean).tolist()
+        # split labels, preds by video
         vid = np.floor_divide(inds, 100000000)
-        #print('videos:', np.unique(vid))
         class_f1 = []
         for v in np.unique(vid):
             sub_inds = np.argwhere(vid == v)
@@ -117,7 +109,6 @@ def compute_phase_scores(inds, labels, predicts, agg, directory=''):
     elif agg == 'video':
         # split labels, preds by video
         vid = np.floor_divide(inds, 100000000)
-        #print('videos:', np.unique(vid))
         accs = []
         scores = []
         for v in np.unique(vid):
@@ -277,30 +268,6 @@ def compute_tool_scores(inds, labels, predicts, agg, directory):
         if agg == 'class':
             mean = mAP(labels, predicts, mean=False, istensor=False) * 100
             std = [0.00] * 7
-        #elif agg == 'video':
-        #    # split labels, preds by video
-        #    vid = np.floor_divide(inds, 100000000)
-        #    accs = []
-        #    scores = []
-        #    for v in np.unique(vid):
-        #        sub_inds = np.argwhere(vid == v)
-        #        sub_labels = labels[sub_inds]
-        #        sub_preds = preds[sub_inds]
-
-        #        # compute mAP
-        #        vid_score = score(sub_labels, sub_preds)
-        #        mean = np.mean(np.vstack(vid_score).T, axis=0)
-        #        mean[:-1] *= 100
-        #        scores.append(mean)
-
-        #    # summarize
-        #    overall_mIOU = np.mean(np.stack(scores, axis=0))
-        #    overall_mIOU = np.around(overall_mIOU, 2)
-        #    mean = overall_mIOU
-
-        #    std = np.std(np.stack(scores), axis=0)
-        #    std = np.around(std, 2)
-        #    std = std.tolist()
     except:
         mean = [-1] * 7 if agg == 'class' else [-1.00]
         std = [0.00] * 7 if agg == 'class' else [0.00]
@@ -313,7 +280,7 @@ def collect_metrics(directory, task='phase', agg='frame'):
     metrics, stds = score_fn(inds, targets, preds, agg, directory)
     return metrics, stds
 
-def metrics_collator(directory, agg, task='phase', name='sanat'):
+def metrics_collator(directory, agg, task='phase', name='sr'):
     results_str = header_tool if task =='tools' else header_phase
     results_str = header_tool_class if agg == 'class' and task =='tools' else header_phase_class if agg == 'class' and task =='phase' else results_str 
     results_file = os.path.join(directory, 'metrics_{:s}.csv'.format('_'.join([task, name])))
@@ -325,7 +292,6 @@ def metrics_collator(directory, agg, task='phase', name='sanat'):
         if feat_dir+'_Trunk' in str(path): continue
         experiment = os.path.join(*str(path).split(str(directory))[-1].split('/')[:-1])
         metric_and_std = collect_metrics(path, task, agg)
-        #print(metric_and_std)
         results = ','.join(map(lambda x, y: "{:.2f} +- {:.2f}".format(x, y), *metric_and_std))
         results_str += ','.join([str(i), results, experiment]) + '\n'
 
@@ -340,26 +306,24 @@ def metrics_collator(directory, agg, task='phase', name='sanat'):
         print('warning: could not write to folder:', directory)
     return
 
-def Main(args, agg):
+def Main(agg):
     prev_path = []
     prev_paths = []
     tasks = ['phase', 'tools']
-    name = '_'.join(args)
+    name = ''
     for task in tasks:
         prev_path = []
         prev_paths = []
         print('Evaluation task:', task)
         for i, path in enumerate(sorted(Path(root_dir).rglob(task), key=lambda p: str(p))):
-            print('test:', path)
             if 'test' not in str(path):
-                print('cont')
                 continue
+            print('test:', path)
             path_dirs = str(path).split('/')
-            path_dirs_str = os.path.join(*path_dirs)
             if path_dirs == prev_path:
                 continue
             prev_path = path_dirs
-            for i, p in enumerate(path_dirs[:1]):
+            for i, _ in enumerate(path_dirs[:1]):
                 src_dir = os.path.join(*path_dirs[:i+1])
                 if src_dir in prev_paths:
                     continue
@@ -370,18 +334,14 @@ def Main(args, agg):
     return
 
 if __name__ == '__main__':
-    if len(sys.argv) <= 2:
-        print('Usage: python generate_test_results.py <user name> <hpc/jz>')
-        sys.exit(-1)
-
-    if sys.argv[2] not in ['hpc', 'jz']:
-        print('Wrong server name!!!')
-        print('Usage: python generate_test_results.py <user name> <hpc/jz>')
-        sys.exit(-1)
-
-    if len(sys.argv) > 3:
+    if len(sys.argv) > 1: 
+        # takes values for the type of metric to compute:
+        #     1. video - video based metrics
+        #     2. frame - frame wise metrics
+        #     3. class - per phase/tool class metrics     
         agg_mode = sys.argv[-1]
     else:
+        # default set to video
         agg_mode = 'video'
 
-    Main(sys.argv[1:3], agg_mode)
+    Main(agg_mode)
