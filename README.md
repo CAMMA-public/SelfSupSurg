@@ -532,6 +532,14 @@ Examples commands for surgical tool recognition **linear fine-tuning**. It uses 
 (selfsupsurg)>cfg=hparams/cholec80/finetuning/imagenet_to_cholec/series_01/test/tools/12.5/2/h002.yaml
 (selfsupsurg)>python main.py -hp $cfg -m supervised
 ```
+### 4. Evaluation
+
+Example command to evaluate all the experiments and collect the results
+```sh
+
+# computes evaluation metrics for all the experiments and saves results in the runs/metrics_<phase/tool>.csv
+(selfsupsurg)>python utils/generate_test_results.py
+```
 
 
 ## Citation
