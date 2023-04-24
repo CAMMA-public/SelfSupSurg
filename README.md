@@ -188,6 +188,9 @@ First perform pre-training using the above scripts or download the [pre-trained 
 ```
 ### 1. Surgical phase recognition (Linear Finetuning)
 The config files for the surgical phase recognition **linear finetuning** experiments are in [cholec80 pre-training init](configs/config/hparams/cholec80/finetuning/cholec_to_cholec/series_01/test/phase) and [imagenet init](configs/config/hparams/cholec80/finetuning/imagenet_to_cholec/series_01/test/phase). The config files are organized as follows:
+<details>
+<summary>config_files</summary>
+<br>
 ```sh
 # config files for the proposed pre-training init from cholec80 are oraganized as follows:
 ├── cholec_to_cholec/series_01/test/phase
@@ -277,6 +280,8 @@ The config files for the surgical phase recognition **linear finetuning** experi
         │   ├── h004.yaml # SwAV imagenet
         │   └── h005.yaml # DINO imagenet
 ```
+</details>
+
 Examples commands for surgical phase linear fine-tuning. It uses 4 GPUS for the training
 ```sh
 # Example 1, run the following command for linear fine-tuning, initialized with MoCO V2 weights 
@@ -298,6 +303,9 @@ Examples commands for surgical phase linear fine-tuning. It uses 4 GPUS for the 
 ### 2. Surgical phase recognition (TCN Finetuning)
 
 The config files for the surgical phase recognition **TCN finetuning** experiments are in [cholec80 pre-training init](configs/config/hparams/cholec80/finetuning/cholec_to_cholec/series_01/test/phase_tcn) and [imagenet init](configs/config/hparams/cholec80/finetuning/imagenet_to_cholec/series_01/test/phase_tcn). The config files are organized as follows:
+<details>
+<summary>config_files</summary>
+<br>
 ```sh
 # config files for the proposed pre-training init from cholec80 are oraganized as follows:
 ├── cholec_to_cholec/series_01/test/phase_tcn
@@ -387,6 +395,7 @@ The config files for the surgical phase recognition **TCN finetuning** experimen
         │   ├── h004.yaml # SwAV imagenet
         │   └── h005.yaml # DINO imagenet
 ```
+</details>
 Examples commands for TCN fine-tuning. We first extract the features for the `train`, `val` and `test` set and then perform the TCN fine-tuning
 ```sh
 # Example 1, run the following command for TCN fine-tuning, initialized with MoCO V2 weights 
@@ -426,6 +435,9 @@ Examples commands for TCN fine-tuning. We first extract the features for the `tr
 ### 3. Surgical tool recognition
 
 The config files for the surgical tool recognition experiments are in [cholec80 pre-training init](configs/config/hparams/cholec80/finetuning/cholec_to_cholec/series_01/test/tools) and [imagenet init](configs/config/hparams/cholec80/finetuning/imagenet_to_cholec/series_01/test/tools). The config files are organized as follows:
+<details>
+<summary>config_files</summary>
+<br>
 ```sh
 # config files for the proposed pre-training init from cholec80 are oraganized as follows:
 ├── cholec_to_cholec/series_01/test/tools
@@ -515,6 +527,7 @@ The config files for the surgical tool recognition experiments are in [cholec80 
         │   ├── h004.yaml # SwAV imagenet
         │   └── h005.yaml # DINO imagenet
 ```
+</details>    
 Examples commands for surgical tool recognition **linear fine-tuning**. It uses 4 GPUS for the training
 ```sh
 # Example 1, run the following command for linear fine-tuning, initialized with MoCO V2 weights 
