@@ -561,12 +561,13 @@ Example command to evaluate all the experiments and collect the results
 
 ## Citation
 ```bibtex
-@article{ramesh2022dissecting,
-  title={Dissecting Self-Supervised Learning Methods for Surgical Computer Vision},
-  author={Ramesh, Sanat and Srivastav, Vinkle and Alapatt, Deepak and Yu, Tong and Murali, Aditya and Sestini, Luca and Innocent Nwoye, Chinedu and Hamoud, Idris and Fleurentin, Antoine and Exarchakis, Georgios and Karargyris, Alexandros and Padoy, Nicolas},
-  journal={arXiv e-prints},
-  pages={arXiv--2207},
-  year={2022}
+@article{ramesh2023dissecting,
+  title={Dissecting self-supervised learning methods for surgical computer vision},
+  author={Ramesh, Sanat and Srivastav, Vinkle and Alapatt, Deepak and Yu, Tong and Murali, Aditya and Sestini, Luca and Nwoye, Chinedu Innocent and Hamoud, Idris and Sharma, Saurav and Fleurentin, Antoine and others},
+  journal={Medical Image Analysis},
+  pages={102844},
+  year={2023},
+  publisher={Elsevier}
 }
 ```
 
