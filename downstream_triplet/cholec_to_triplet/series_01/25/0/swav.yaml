@@ -1,0 +1,52 @@
+CONFIG:
+  DATA:
+    HOME : "./datasets/CholecT50"
+    FRAMES : "./datasets/CholecT50/data"
+    DICT : "./datasets/CholecT50/dict"
+    NUM_TRIPLET: 100
+  TRAIN:
+    HOME: "."
+    AUG_LIST: ['rot90', 'hflip', 'contrast', 'original']
+    BS: 32
+    NW: 4
+    GPUS: 0
+    SEED : 324
+    MAX_EPOCHS: 40
+    LR: 0.0001
+    WEIGHT_DECAY : 0.00001
+    BEST_MODEL_WEIGHTS_NAME : ""
+    MODEL_WEIGHTS_PATH : os.path.join(CONFIG.TRAIN.HOME, "checkpoints")
+    PREDICTION_PATH : os.path.join(CONFIG.TRAIN.HOME,"predictions")
+    ES_PATIENCE: 10
+    SPLIT: 'ctp_25_0'
+    OPT: 'sgd'
+    FOLD: 1
+    MOMENTUM: 0.95
+    LR1: 0.001
+    WD1: 0.000001
+    GM1: 0.99
+    PJ: 'finetuning_25_v1'
+    WTS: 'ssl'
+    SSL_TYPE: 'swav'
+    BM: 'resnet50'
+    WTFOLDER: 'ssl_no_phase'
+    FINETUNE: True
+    LINEARPROB: False
+    SCHEDULER: 'multi-step'
+    BACKLR: 0.0001 
+    FCLR: 0.01
+    WSL_LR: 0.1
+    CAGAM_LR: 0.01
+    DECODER_LR: 0.01    
+  RESUME:
+    CKP_NAME: None
+    CKP_EP: 1
+  EVAL:
+    BS: 16
+    NW: 4
+    TOPK: 5
+  MODEL:
+    SAVEDIR: "checkpoints"
+  
+  
+  
