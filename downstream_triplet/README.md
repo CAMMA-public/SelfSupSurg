@@ -33,6 +33,7 @@ Follow [CholecT50 Dataset](https://github.com/CAMMA-public/cholect50) to downloa
 The config files for the surgical triplet recognition experiments are structured as follows:
 <details>
 <summary>config_files</summary>
+
 ```sh
 ├── cholec_to_triplet/series_01/
     ├── 100 #(100 % of CholecT45)
