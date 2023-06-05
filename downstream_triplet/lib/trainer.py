@@ -49,7 +49,7 @@ class TripletTrainer:
 
     def train(self):
         self.model.train()
-        self.model.module.backbone.eval()
+        # self.model.module.backbone.eval() # NOTE: enable this for linear probing experiments ..
 
         logging.info("Training started..")
 
