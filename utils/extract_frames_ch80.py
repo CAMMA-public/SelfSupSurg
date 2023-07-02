@@ -19,11 +19,11 @@ for video_name in VIDEO_NAMES:
     count=0
     vid_id = int(video_name.replace('.mp4', '').replace("video", ""))
     if vid_id in TRAIN_NUMBERS:
-        save_dir = './frames/train/' + video_name.strip('.mp4') +'/'
+        save_dir = './frames/train/' + video_name.replace('.mp4') +'/'
     elif vid_id in VAL_NUMBERS:
-        save_dir = './frames/val/' + video_name.strip('.mp4') +'/'
+        save_dir = './frames/val/' + video_name.replace('.mp4') +'/'
     elif vid_id in TEST_NUMBERS:
-        save_dir = './frames/test/' + video_name.strip('.mp4') +'/'
+        save_dir = './frames/test/' + video_name.replace('.mp4') +'/'
     save_dir = os.path.join(ROOT_DIR, save_dir)
     os.makedirs(save_dir, exist_ok=True)
     while success is True:
