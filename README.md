@@ -7,7 +7,10 @@
 
 ## **Dissecting Self-Supervised Learning Methods for Surgical Computer Vision**
 
-_Sanat Ramesh, Vinkle Srivastav, Deepak Alapatt, Tong Yu, Aditya Murali, Luca Sestini, Chinedu Innocent Nwoye, Idris Hamoud, Saurav Sharma, Antoine Fleurentin, Georgios Exarchakis, Alexandros Karargyris, Nicolas Padoy_, 2022
+_Sanat Ramesh*, [Vinkle Srivastav*](https://vinkle.github.io/), Deepak Alapatt*, Tong Yu*, Aditya Murali, Luca Sestini, Chinedu Innocent Nwoye, Idris Hamoud, Saurav Sharma, Antoine Fleurentin, Georgios Exarchakis, Alexandros Karargyris, Nicolas Padoy_, 2022
+
+
+*share co-first authorship.
 
 [![arXiv](https://img.shields.io/badge/arxiv-2207.00449-red)](https://arxiv.org/abs/2207.00449)
 
